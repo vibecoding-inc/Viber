@@ -22,7 +22,15 @@ android {
         }
 
         // GitHub OAuth configuration
-        buildConfigField("String", "GITHUB_CLIENT_ID", "\"${project.findProperty("GITHUB_CLIENT_ID") ?: ""}\"")
+        val githubClientId = project.findProperty("GITHUB_CLIENT_ID") as? String 
+            ?: System.getenv("GITHUB_CLIENT_ID") 
+            ?: ""
+        
+        if (githubClientId.isEmpty()) {
+            logger.warn("WARNING: GITHUB_CLIENT_ID is not set. Authentication will not work.")
+        }
+        
+        buildConfigField("String", "GITHUB_CLIENT_ID", "\"$githubClientId\"")
         buildConfigField("String", "GITHUB_REDIRECT_URI", "\"viber://oauth/callback\"")
     }
 

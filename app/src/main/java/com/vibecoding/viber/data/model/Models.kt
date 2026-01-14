@@ -77,3 +77,9 @@ data class CopilotSuggestion(
     val position: Int,
     val range: IntRange
 )
+
+data class SearchResponse<T>(
+    val total_count: Int,
+    val incomplete_results: Boolean,
+    val items: List<T>
+)

@@ -185,7 +185,10 @@ fun CatModeOverlay(
     isActive: Boolean = false
 ) {
     if (isActive) {
-        Box(modifier = modifier.fillMaxSize()) {
+        BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+            val maxWidthDp = maxWidth
+            val maxHeightDp = maxHeight
+            
             // Multiple cats floating around
             for (i in 0..4) {
                 val offsetX = remember { Random.nextFloat() }
@@ -195,8 +198,8 @@ fun CatModeOverlay(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
-                            start = (offsetX * 300).dp,
-                            top = (offsetY * 600).dp
+                            start = maxWidthDp * offsetX * 0.8f, // Use 80% of width to keep cats visible
+                            top = maxHeightDp * offsetY * 0.8f   // Use 80% of height to keep cats visible
                         )
                 ) {
                     CatEmoji(isAnimating = true)
