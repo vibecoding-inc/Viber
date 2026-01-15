@@ -41,10 +41,11 @@ Add your GitHub OAuth credentials to the project:
 1. Open `gradle.properties` in the project root
 2. Add your GitHub Client ID:
    ```properties
-   GITHUB_CLIENT_ID=your_actual_client_id_here
+   OAUTH_CLIENT_ID=your_actual_client_id_here
    ```
 
 > **Note**: For production apps, the client secret should be handled server-side. This demo shows the OAuth flow structure.
+> **Note**: The property is named `OAUTH_CLIENT_ID` (not `GITHUB_CLIENT_ID`) due to GitHub Actions naming limitations.
 
 ### 4. Build the Project
 
@@ -231,7 +232,7 @@ See [CAT_MODE.md](CAT_MODE.md) for detailed documentation.
 - **Solution**: 
   1. Verify redirect URI in GitHub OAuth app settings
   2. Check AndroidManifest.xml intent-filter
-  3. Ensure GITHUB_CLIENT_ID is set correctly
+  3. Ensure OAUTH_CLIENT_ID is set correctly
 
 **Problem**: Network errors
 - **Solution**: 

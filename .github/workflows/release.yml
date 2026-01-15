@@ -33,7 +33,7 @@ jobs:
         
     - name: Build Release APK
       env:
-        GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+        OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -54,7 +54,7 @@ jobs:
         
     - name: Build Release AAB
       env:
-        GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+        OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}

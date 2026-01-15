@@ -30,8 +30,9 @@ A modern GitHub client for Android, optimized for vibe coding and GitHub Copilot
 
 2. Add your GitHub credentials to `gradle.properties`:
    ```properties
-   GITHUB_CLIENT_ID=your_client_id_here
+   OAUTH_CLIENT_ID=your_client_id_here
    ```
+   Note: Use `OAUTH_CLIENT_ID` (not `GITHUB_CLIENT_ID`) due to GitHub Actions limitations.
 
 3. Build and run:
    ```bash

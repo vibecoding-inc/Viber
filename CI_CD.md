@@ -46,11 +46,12 @@ Configure these secrets in your GitHub repository settings (`Settings` → `Secr
 
 ### Essential Secrets
 
-#### `GITHUB_CLIENT_ID` (Required)
+#### `OAUTH_CLIENT_ID` (Required)
 - **Description**: GitHub OAuth application client ID
 - **Used in**: Both build and release workflows
 - **How to get**: Create a GitHub OAuth app at https://github.com/settings/developers
 - **Example**: `Iv1.1234567890abcdef`
+- **Note**: Named `OAUTH_CLIENT_ID` instead of `GITHUB_CLIENT_ID` due to GitHub Actions naming limitations
 
 ### Release Signing Secrets (Optional but recommended for production)
 
@@ -102,8 +103,8 @@ Configure these secrets in your GitHub repository settings (`Settings` → `Secr
 
 Add each secret one by one:
 
-1. **GITHUB_CLIENT_ID**
-   - Name: `GITHUB_CLIENT_ID`
+1. **OAUTH_CLIENT_ID**
+   - Name: `OAUTH_CLIENT_ID`
    - Value: Your GitHub OAuth app client ID
    - Click `Add secret`
 
@@ -172,9 +173,9 @@ You can also manually trigger workflows from the Actions tab:
 
 ## Troubleshooting
 
-### Build Fails with "GITHUB_CLIENT_ID not set"
+### Build Fails with "OAUTH_CLIENT_ID not set"
 
-**Solution**: Add the `GITHUB_CLIENT_ID` secret to your repository settings.
+**Solution**: Add the `OAUTH_CLIENT_ID` secret to your repository settings.
 
 ### Release Builds are Unsigned
 

@@ -22,12 +22,12 @@ android {
         }
 
         // GitHub OAuth configuration
-        val githubClientId = project.findProperty("GITHUB_CLIENT_ID") as? String 
-            ?: System.getenv("GITHUB_CLIENT_ID") 
+        val githubClientId = project.findProperty("OAUTH_CLIENT_ID") as? String 
+            ?: System.getenv("OAUTH_CLIENT_ID") 
             ?: ""
         
         if (githubClientId.isEmpty()) {
-            logger.warn("WARNING: GITHUB_CLIENT_ID is not set. Authentication will not work.")
+            logger.warn("WARNING: OAUTH_CLIENT_ID is not set. Authentication will not work.")
         }
         
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"$githubClientId\"")
