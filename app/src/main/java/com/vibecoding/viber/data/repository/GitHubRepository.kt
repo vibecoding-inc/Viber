@@ -5,6 +5,7 @@ import com.vibecoding.viber.data.model.*
 import com.vibecoding.viber.data.remote.GitHubApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,9 +20,7 @@ class GitHubRepository @Inject constructor(
     private val apiService: GitHubApiService,
     private val preferencesManager: PreferencesManager
 ) {
-    val isAuthenticated: Flow<Boolean> = kotlinx.coroutines.flow.map(
-        preferencesManager.accessToken
-    ) { token ->
+    val isAuthenticated: Flow<Boolean> = preferencesManager.accessToken.map { token ->
         !token.isNullOrEmpty()
     }
 
