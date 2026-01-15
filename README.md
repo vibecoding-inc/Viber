@@ -71,6 +71,20 @@ Enable Cat Mode in your profile settings to get:
 - DataStore (Preferences)
 - GitHub REST API v3
 
+## CI/CD
+
+This project includes automated CI/CD workflows using GitHub Actions:
+- **Automated builds** on every PR
+- **Automated releases** with signed APK/AAB attachments
+- See [CI_CD.md](CI_CD.md) for setup instructions and required secrets
+
+## Documentation
+
+- [SETUP.md](SETUP.md) - Detailed setup and build instructions
+- [CAT_MODE.md](CAT_MODE.md) - Cat Mode feature documentation
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical architecture guide
+- [CI_CD.md](CI_CD.md) - CI/CD configuration and secrets setup
+
 ## License
 
 MIT License - See LICENSE file for details
