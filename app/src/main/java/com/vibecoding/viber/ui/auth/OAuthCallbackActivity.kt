@@ -1,15 +1,18 @@
 package com.vibecoding.viber.ui.auth
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.vibecoding.viber.data.repository.AuthRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OAuthCallbackActivity : ComponentActivity() {
 
-    private val viewModel: AuthViewModel by viewModels()
+    @Inject
+    lateinit var authRepository: AuthRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +21,13 @@ class OAuthCallbackActivity : ComponentActivity() {
         if (uri != null && uri.scheme == "viber" && uri.host == "oauth") {
             val code = uri.getQueryParameter("code")
             if (code != null) {
-                viewModel.handleAuthCallback(code)
+                // Use lifecycleScope to ensure token exchange completes before finishing
+                lifecycleScope.launch {
+                    // Note: In production, client_secret should be handled server-side
+                    authRepository.handleAuthCode(code, "")
+                    finish()
+                }
+                return
             }
         }
 
