@@ -26,11 +26,20 @@ android {
             ?: System.getenv("OAUTH_CLIENT_ID") 
             ?: ""
         
+        val githubClientSecret = project.findProperty("OAUTH_CLIENT_SECRET") as? String
+            ?: System.getenv("OAUTH_CLIENT_SECRET")
+            ?: ""
+        
         if (githubClientId.isEmpty()) {
             logger.warn("WARNING: OAUTH_CLIENT_ID is not set. Authentication will not work.")
         }
         
+        if (githubClientSecret.isEmpty()) {
+            logger.warn("WARNING: OAUTH_CLIENT_SECRET is not set. Authentication will not work.")
+        }
+        
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"$githubClientId\"")
+        buildConfigField("String", "GITHUB_CLIENT_SECRET", "\"$githubClientSecret\"")
         buildConfigField("String", "GITHUB_REDIRECT_URI", "\"viber://oauth/callback\"")
     }
 

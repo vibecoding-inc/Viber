@@ -25,8 +25,7 @@ class OAuthCallbackActivity : ComponentActivity() {
             if (code != null) {
                 // Use lifecycleScope to ensure token exchange completes before finishing
                 lifecycleScope.launch {
-                    // Note: In production, client_secret should be handled server-side
-                    val result = authRepository.handleAuthCode(code, "")
+                    val result = authRepository.handleAuthCode(code)
                     if (result is Result.Error) {
                         Log.e("OAuthCallbackActivity", "Auth failed: ${result.message}")
                     }

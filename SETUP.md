@@ -39,13 +39,14 @@ To enable authentication, you need to register an OAuth application with GitHub:
 Add your GitHub OAuth credentials to the project:
 
 1. Open `gradle.properties` in the project root
-2. Add your GitHub Client ID:
+2. Add your GitHub OAuth credentials:
    ```properties
    OAUTH_CLIENT_ID=your_actual_client_id_here
+   OAUTH_CLIENT_SECRET=your_actual_client_secret_here
    ```
 
-> **Note**: For production apps, the client secret should be handled server-side. This demo shows the OAuth flow structure.
-> **Note**: The property is named `OAUTH_CLIENT_ID` (not `GITHUB_CLIENT_ID`) due to GitHub Actions naming limitations.
+> **Security Note**: Keep your Client Secret secure. Never commit it to version control. For local development, add `gradle.properties` to `.gitignore` or use environment variables.
+> **Note**: The properties are named `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` (not `GITHUB_*`) due to GitHub Actions naming limitations.
 
 ### 4. Build the Project
 

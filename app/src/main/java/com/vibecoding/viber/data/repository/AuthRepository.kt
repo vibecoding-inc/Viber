@@ -23,11 +23,11 @@ class AuthRepository @Inject constructor(
                 "&state=viber_auth_state"
     }
 
-    suspend fun handleAuthCode(code: String, clientSecret: String): Result<String> {
+    suspend fun handleAuthCode(code: String): Result<String> {
         return try {
             val response = authService.getAccessToken(
                 clientId = BuildConfig.GITHUB_CLIENT_ID,
-                clientSecret = clientSecret,
+                clientSecret = BuildConfig.GITHUB_CLIENT_SECRET,
                 code = code,
                 redirectUri = BuildConfig.GITHUB_REDIRECT_URI
             )
