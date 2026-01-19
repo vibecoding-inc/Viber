@@ -1,9 +1,11 @@
 package com.vibecoding.viber.ui.auth
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
 import com.vibecoding.viber.data.repository.AuthRepository
+import com.vibecoding.viber.data.repository.Result
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,7 +26,10 @@ class OAuthCallbackActivity : ComponentActivity() {
                 // Use lifecycleScope to ensure token exchange completes before finishing
                 lifecycleScope.launch {
                     // Note: In production, client_secret should be handled server-side
-                    authRepository.handleAuthCode(code, "")
+                    val result = authRepository.handleAuthCode(code, "")
+                    if (result is Result.Error) {
+                        Log.e("OAuthCallbackActivity", "Auth failed: ${result.message}")
+                    }
                     finish()
                 }
                 return
