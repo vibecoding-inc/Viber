@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,6 +26,7 @@ class PreferencesManager @Inject constructor(
         private val USER_AVATAR_KEY = stringPreferencesKey("user_avatar")
         private val VIBE_MODE_KEY = stringPreferencesKey("vibe_mode")
         private val CAT_MODE_KEY = stringPreferencesKey("cat_mode")
+        private val AUTH_TYPE_KEY = stringPreferencesKey("auth_type")
     }
 
     val accessToken: Flow<String?> = dataStore.data.map { preferences ->
@@ -69,6 +71,16 @@ class PreferencesManager @Inject constructor(
     suspend fun setCatMode(enabled: Boolean) {
         dataStore.edit { preferences ->
             preferences[CAT_MODE_KEY] = enabled.toString()
+        }
+    }
+
+    suspend fun getAuthType(): String? {
+        return dataStore.data.first()[AUTH_TYPE_KEY]
+    }
+
+    suspend fun setAuthType(type: String) {
+        dataStore.edit { preferences ->
+            preferences[AUTH_TYPE_KEY] = type
         }
     }
 
