@@ -26,6 +26,8 @@ class GitHubAppAuthProvider @Inject constructor(
         private const val TAG = "GitHubAppAuthProvider"
         // Refresh token 5 minutes before expiration
         private const val TOKEN_REFRESH_MARGIN_MS = 5 * 60 * 1000L
+        // Default token expiration (1 hour) if parsing fails
+        private const val DEFAULT_TOKEN_EXPIRATION_SECONDS = 3600L
     }
 
     override val type: AuthType = AuthType.GITHUB_APP
@@ -96,7 +98,7 @@ class GitHubAppAuthProvider @Inject constructor(
             )
             
             val installationId = BuildConfig.GITHUB_APP_INSTALLATION_ID.toLongOrNull()
-                ?: return Result.Error("Invalid installation ID")
+                ?: return Result.Error("Installation ID must be a valid number, got: '${BuildConfig.GITHUB_APP_INSTALLATION_ID}'")
             
             val response = appService.getInstallationToken(
                 jwtToken = "Bearer $jwt",
@@ -145,8 +147,8 @@ class GitHubAppAuthProvider @Inject constructor(
         return try {
             Instant.from(DateTimeFormatter.ISO_DATE_TIME.parse(expiresAt))
         } catch (e: Exception) {
-            // If parsing fails, assume token expires in 1 hour (default)
-            Instant.now().plusSeconds(3600)
+            // If parsing fails, use default expiration
+            Instant.now().plusSeconds(DEFAULT_TOKEN_EXPIRATION_SECONDS)
         }
     }
 }

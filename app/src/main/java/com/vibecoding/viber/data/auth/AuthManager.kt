@@ -15,9 +15,6 @@ class AuthManager @Inject constructor(
     val githubAppProvider: GitHubAppAuthProvider,
     private val preferencesManager: PreferencesManager
 ) {
-    companion object {
-        private const val AUTH_TYPE_KEY = "auth_type"
-    }
 
     /**
      * Get the currently active authentication provider.
