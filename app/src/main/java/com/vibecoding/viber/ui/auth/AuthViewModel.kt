@@ -45,9 +45,7 @@ class AuthViewModel @Inject constructor(
 
     fun handleAuthCallback(code: String) {
         viewModelScope.launch {
-            // Note: In production, client_secret should be handled server-side
-            // For this demo, we'll show how it would work
-            val result = authRepository.handleAuthCode(code, "")
+            val result = authRepository.handleAuthCode(code)
             when (result) {
                 is com.vibecoding.viber.data.repository.Result.Success -> {
                     _authSuccess.value = true

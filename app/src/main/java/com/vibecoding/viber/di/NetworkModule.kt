@@ -1,6 +1,10 @@
 package com.vibecoding.viber.di
 
 import android.content.Context
+import com.vibecoding.viber.data.auth.AuthManager
+import com.vibecoding.viber.data.auth.GitHubAppAuthProvider
+import com.vibecoding.viber.data.auth.GitHubAppService
+import com.vibecoding.viber.data.auth.OAuthAuthProvider
 import com.vibecoding.viber.data.local.PreferencesManager
 import com.vibecoding.viber.data.remote.GitHubApiService
 import com.vibecoding.viber.data.remote.GitHubAuthService
@@ -119,5 +123,39 @@ object NetworkModule {
     @Singleton
     fun provideGitHubAuthService(@GitHubAuthRetrofit retrofit: Retrofit): GitHubAuthService {
         return retrofit.create(GitHubAuthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubAppService(@GitHubApiRetrofit retrofit: Retrofit): GitHubAppService {
+        return retrofit.create(GitHubAppService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOAuthAuthProvider(
+        authService: GitHubAuthService,
+        preferencesManager: PreferencesManager
+    ): OAuthAuthProvider {
+        return OAuthAuthProvider(authService, preferencesManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubAppAuthProvider(
+        appService: GitHubAppService,
+        preferencesManager: PreferencesManager
+    ): GitHubAppAuthProvider {
+        return GitHubAppAuthProvider(appService, preferencesManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthManager(
+        oauthProvider: OAuthAuthProvider,
+        githubAppProvider: GitHubAppAuthProvider,
+        preferencesManager: PreferencesManager
+    ): AuthManager {
+        return AuthManager(oauthProvider, githubAppProvider, preferencesManager)
     }
 }

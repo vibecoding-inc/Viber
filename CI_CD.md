@@ -53,6 +53,35 @@ Configure these secrets in your GitHub repository settings (`Settings` → `Secr
 - **Example**: `Iv1.1234567890abcdef`
 - **Note**: Named `OAUTH_CLIENT_ID` instead of `GITHUB_CLIENT_ID` due to GitHub Actions naming limitations
 
+#### `OAUTH_CLIENT_SECRET` (Required)
+- **Description**: GitHub OAuth application client secret
+- **Used in**: Both build and release workflows
+- **How to get**: Generated when you create a GitHub OAuth app at https://github.com/settings/developers
+- **Example**: `1234567890abcdef1234567890abcdef12345678`
+- **Security**: Keep this secret secure! Never expose it in logs or commit it to the repository.
+
+### GitHub App Secrets (Optional - for advanced API access)
+
+Use these if you want to use GitHub App authentication for advanced features like Copilot APIs.
+
+#### `GITHUB_APP_ID` (Optional)
+- **Description**: GitHub App ID
+- **Used in**: Both build and release workflows
+- **How to get**: Create a GitHub App at https://github.com/settings/apps
+- **Example**: `123456`
+
+#### `GITHUB_APP_PRIVATE_KEY` (Optional)
+- **Description**: GitHub App private key in PEM format
+- **Used in**: Both build and release workflows
+- **How to get**: Generate a private key in your GitHub App settings
+- **Security**: This is a sensitive key! Keep it secure and never commit it to the repository.
+
+#### `GITHUB_APP_INSTALLATION_ID` (Optional)
+- **Description**: GitHub App installation ID for your organization/user
+- **Used in**: Both build and release workflows
+- **How to get**: Install your GitHub App on your account and get the installation ID from the URL
+- **Example**: `12345678`
+
 ### Release Signing Secrets (Optional but recommended for production)
 
 #### `KEYSTORE_BASE64` (Optional)
@@ -108,7 +137,12 @@ Add each secret one by one:
    - Value: Your GitHub OAuth app client ID
    - Click `Add secret`
 
-2. **KEYSTORE_BASE64** (for releases)
+2. **OAUTH_CLIENT_SECRET**
+   - Name: `OAUTH_CLIENT_SECRET`
+   - Value: Your GitHub OAuth app client secret
+   - Click `Add secret`
+
+3. **KEYSTORE_BASE64** (for releases)
    - Name: `KEYSTORE_BASE64`
    - Value: Base64-encoded keystore file content
    - Click `Add secret`

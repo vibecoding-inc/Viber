@@ -26,12 +26,44 @@ android {
             ?: System.getenv("OAUTH_CLIENT_ID") 
             ?: ""
         
+        val githubClientSecret = project.findProperty("OAUTH_CLIENT_SECRET") as? String
+            ?: System.getenv("OAUTH_CLIENT_SECRET")
+            ?: ""
+        
+        // GitHub App configuration
+        val githubAppId = project.findProperty("GITHUB_APP_ID") as? String
+            ?: System.getenv("GITHUB_APP_ID")
+            ?: ""
+        
+        val githubAppPrivateKey = project.findProperty("GITHUB_APP_PRIVATE_KEY") as? String
+            ?: System.getenv("GITHUB_APP_PRIVATE_KEY")
+            ?: ""
+        
+        val githubAppInstallationId = project.findProperty("GITHUB_APP_INSTALLATION_ID") as? String
+            ?: System.getenv("GITHUB_APP_INSTALLATION_ID")
+            ?: ""
+        
         if (githubClientId.isEmpty()) {
-            logger.warn("WARNING: OAUTH_CLIENT_ID is not set. Authentication will not work.")
+            logger.warn("WARNING: OAUTH_CLIENT_ID is not set. OAuth authentication will not work.")
         }
         
+        if (githubClientSecret.isEmpty()) {
+            logger.warn("WARNING: OAUTH_CLIENT_SECRET is not set. OAuth authentication will not work.")
+        }
+        
+        if (githubAppId.isEmpty()) {
+            logger.warn("INFO: GITHUB_APP_ID is not set. GitHub App authentication will not be available.")
+        }
+        
+        // OAuth App config
         buildConfigField("String", "GITHUB_CLIENT_ID", "\"$githubClientId\"")
+        buildConfigField("String", "GITHUB_CLIENT_SECRET", "\"$githubClientSecret\"")
         buildConfigField("String", "GITHUB_REDIRECT_URI", "\"viber://oauth/callback\"")
+        
+        // GitHub App config
+        buildConfigField("String", "GITHUB_APP_ID", "\"$githubAppId\"")
+        buildConfigField("String", "GITHUB_APP_PRIVATE_KEY", "\"${githubAppPrivateKey.replace("\n", "\\n")}\"")
+        buildConfigField("String", "GITHUB_APP_INSTALLATION_ID", "\"$githubAppInstallationId\"")
     }
 
     buildTypes {
@@ -114,6 +146,15 @@ dependencies {
 
     // Browser
     implementation("androidx.browser:browser:1.8.0")
+
+    // JWT for GitHub App authentication
+    implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-gson:0.12.5")
+    
+    // BouncyCastle for PEM key parsing
+    implementation("org.bouncycastle:bcprov-jdk18on:1.77")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.77")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

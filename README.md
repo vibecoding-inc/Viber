@@ -6,7 +6,8 @@ A modern GitHub client for Android, optimized for vibe coding and GitHub Copilot
 
 ✨ **Vibe Mode** - Enhanced UI theme for the ultimate coding experience  
 🐱 **Cat Mode** - Cats and confetti celebrations on every success!  
-🔐 **GitHub OAuth** - Secure authentication with GitHub  
+🔐 **GitHub OAuth** - Secure authentication with GitHub OAuth Apps  
+🏢 **GitHub App Support** - Advanced API access with GitHub Apps  
 📦 **Repository Browser** - View and manage your repositories  
 🐛 **Issue Tracking** - Browse and manage issues  
 🔀 **Pull Requests** - Review and manage pull requests  
@@ -19,9 +20,12 @@ A modern GitHub client for Android, optimized for vibe coding and GitHub Copilot
 
 - Android Studio Arctic Fox or newer
 - Android SDK 24 or higher
-- GitHub OAuth App credentials
+- GitHub OAuth App credentials (for user authentication)
+- GitHub App credentials (optional, for advanced API access)
 
 ### Configuration
+
+#### Option 1: OAuth App (Recommended for user auth)
 
 1. Create a GitHub OAuth App:
    - Go to GitHub Settings → Developer settings → OAuth Apps → New OAuth App
@@ -31,8 +35,24 @@ A modern GitHub client for Android, optimized for vibe coding and GitHub Copilot
 2. Add your GitHub credentials to `gradle.properties`:
    ```properties
    OAUTH_CLIENT_ID=your_client_id_here
+   OAUTH_CLIENT_SECRET=your_client_secret_here
    ```
-   Note: Use `OAUTH_CLIENT_ID` (not `GITHUB_CLIENT_ID`) due to GitHub Actions limitations.
+   Note: Use `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` (not `GITHUB_*`) due to GitHub Actions limitations.
+
+#### Option 2: GitHub App (For advanced API access)
+
+1. Create a GitHub App:
+   - Go to GitHub Settings → Developer settings → GitHub Apps → New GitHub App
+   - Set Homepage URL and Callback URL
+   - Enable required permissions (Contents, Copilot, etc.)
+   - Generate a private key
+
+2. Add your GitHub App credentials to `gradle.properties`:
+   ```properties
+   GITHUB_APP_ID=your_app_id_here
+   GITHUB_APP_PRIVATE_KEY=your_private_key_here
+   GITHUB_APP_INSTALLATION_ID=your_installation_id_here
+   ```
 
 3. Build and run:
    ```bash
