@@ -27,10 +27,14 @@ class GitHubRepository @Inject constructor(
     suspend fun getCurrentUser(): Result<User> {
         return try {
             val response = apiService.getCurrentUser()
-            if (response.isSuccessful && response.body() != null) {
-                val user = response.body()!!
-                preferencesManager.saveUserInfo(user.login, user.avatarUrl)
-                Result.Success(user)
+            if (response.isSuccessful) {
+                val user = response.body()
+                if (user != null) {
+                    preferencesManager.saveUserInfo(user.login, user.avatarUrl)
+                    Result.Success(user)
+                } else {
+                    Result.Error("Failed to fetch user: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch user: ${response.message()}")
             }
@@ -42,8 +46,13 @@ class GitHubRepository @Inject constructor(
     suspend fun getUserRepositories(page: Int = 1): Result<List<Repository>> {
         return try {
             val response = apiService.getUserRepositories(page = page)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!)
+            if (response.isSuccessful) {
+                val repositories = response.body()
+                if (repositories != null) {
+                    Result.Success(repositories)
+                } else {
+                    Result.Error("Failed to fetch repositories: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch repositories: ${response.message()}")
             }
@@ -55,8 +64,13 @@ class GitHubRepository @Inject constructor(
     suspend fun getRepository(owner: String, repo: String): Result<Repository> {
         return try {
             val response = apiService.getRepository(owner, repo)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!)
+            if (response.isSuccessful) {
+                val repository = response.body()
+                if (repository != null) {
+                    Result.Success(repository)
+                } else {
+                    Result.Error("Failed to fetch repository: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch repository: ${response.message()}")
             }
@@ -73,8 +87,13 @@ class GitHubRepository @Inject constructor(
     ): Result<List<Issue>> {
         return try {
             val response = apiService.getRepositoryIssues(owner, repo, state, page = page)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!)
+            if (response.isSuccessful) {
+                val issues = response.body()
+                if (issues != null) {
+                    Result.Success(issues)
+                } else {
+                    Result.Error("Failed to fetch issues: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch issues: ${response.message()}")
             }
@@ -91,8 +110,13 @@ class GitHubRepository @Inject constructor(
     ): Result<List<PullRequest>> {
         return try {
             val response = apiService.getRepositoryPullRequests(owner, repo, state, page = page)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!)
+            if (response.isSuccessful) {
+                val pullRequests = response.body()
+                if (pullRequests != null) {
+                    Result.Success(pullRequests)
+                } else {
+                    Result.Error("Failed to fetch pull requests: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch pull requests: ${response.message()}")
             }
@@ -108,8 +132,13 @@ class GitHubRepository @Inject constructor(
     ): Result<List<Issue>> {
         return try {
             val response = apiService.getUserIssues(filter, state, page = page)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!)
+            if (response.isSuccessful) {
+                val issues = response.body()
+                if (issues != null) {
+                    Result.Success(issues)
+                } else {
+                    Result.Error("Failed to fetch issues: Empty response body")
+                }
             } else {
                 Result.Error("Failed to fetch issues: ${response.message()}")
             }
@@ -121,8 +150,13 @@ class GitHubRepository @Inject constructor(
     suspend fun searchRepositories(query: String, page: Int = 1): Result<List<Repository>> {
         return try {
             val response = apiService.searchRepositories(query, page = page)
-            if (response.isSuccessful && response.body() != null) {
-                Result.Success(response.body()!!.items)
+            if (response.isSuccessful) {
+                val searchResult = response.body()
+                if (searchResult != null) {
+                    Result.Success(searchResult.items)
+                } else {
+                    Result.Error("Failed to search repositories: Empty response body")
+                }
             } else {
                 Result.Error("Failed to search repositories: ${response.message()}")
             }

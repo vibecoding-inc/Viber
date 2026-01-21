@@ -32,10 +32,15 @@ class AuthRepository @Inject constructor(
                 redirectUri = BuildConfig.GITHUB_REDIRECT_URI
             )
             
-            if (response.isSuccessful && response.body() != null) {
-                val accessToken = response.body()!!.accessToken
-                preferencesManager.saveAccessToken(accessToken)
-                Result.Success(accessToken)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val accessToken = body.accessToken
+                    preferencesManager.saveAccessToken(accessToken)
+                    Result.Success(accessToken)
+                } else {
+                    Result.Error("Failed to get access token: Empty response body")
+                }
             } else {
                 Result.Error("Failed to get access token: ${response.message()}")
             }
