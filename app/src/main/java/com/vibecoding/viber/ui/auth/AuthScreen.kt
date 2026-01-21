@@ -102,82 +102,82 @@ fun AuthScreen(
                 )
             } else if (isLoading && deviceFlowData != null) {
                 // Waiting for user to authorize
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                deviceFlowData?.let { currentDeviceFlowData ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
                     ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(48.dp)
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Text(
-                            text = "Enter this code on GitHub:",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        Column(
+                            modifier = Modifier.padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(48.dp)
+                            )
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
                             Text(
-                                text = deviceFlowData.userCode,
-                                fontSize = 32.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                letterSpacing = 4.sp
+                                text = "Enter this code on GitHub:",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = currentDeviceFlowData.userCode,
+                                    fontSize = 32.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    letterSpacing = 4.sp
+                                )
+                                
+                                Spacer(modifier = Modifier.width(8.dp))
+                                
+                                IconButton(
+                                    onClick = {
+                                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                        val clip = ClipData.newPlainText("User Code", currentDeviceFlowData.userCode)
+                                        clipboard.setPrimaryClip(clip)
+                                        Toast.makeText(context, "Code copied to clipboard", Toast.LENGTH_SHORT).show()
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.ContentCopy,
+                                        contentDescription = "Copy code",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(24.dp))
+
+                            Text(
+                                text = "Waiting for authorization...",
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                textAlign = TextAlign.Center
                             )
                             
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.height(8.dp))
                             
-                            IconButton(
-                                onClick = {
-                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                    val clip = ClipData.newPlainText("User Code", deviceFlowData.userCode)
-                                    clipboard.setPrimaryClip(clip)
-                                    Toast.makeText(context, "Code copied to clipboard", Toast.LENGTH_SHORT).show()
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.ContentCopy,
-                                    contentDescription = "Copy code",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
+                            Text(
+                                text = "The browser will open automatically",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                textAlign = TextAlign.Center
+                            )
                         }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Text(
-                            text = "Waiting for authorization...",
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                            textAlign = TextAlign.Center
-                        )
-                        
-                        Spacer(modifier = Modifier.height(8.dp))
-                        
-                        Text(
-                            text = "The browser will open automatically",
-                            fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            textAlign = TextAlign.Center
-                        )
                     }
                 }
-            } else if (isLoading) {
-                CircularProgressIndicator()
             }
-
+            
             // Error message
             error?.let {
                 Spacer(modifier = Modifier.height(16.dp))
