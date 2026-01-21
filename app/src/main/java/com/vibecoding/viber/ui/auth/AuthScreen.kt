@@ -130,7 +130,7 @@ fun AuthScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = deviceFlowData?.userCode ?: "",
+                                text = deviceFlowData.userCode,
                                 fontSize = 32.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
@@ -142,7 +142,7 @@ fun AuthScreen(
                             IconButton(
                                 onClick = {
                                     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                    val clip = ClipData.newPlainText("User Code", deviceFlowData?.userCode)
+                                    val clip = ClipData.newPlainText("User Code", deviceFlowData.userCode)
                                     clipboard.setPrimaryClip(clip)
                                     Toast.makeText(context, "Code copied to clipboard", Toast.LENGTH_SHORT).show()
                                 }

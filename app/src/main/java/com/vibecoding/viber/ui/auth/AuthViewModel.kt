@@ -76,7 +76,7 @@ class AuthViewModel @Inject constructor(
         pollingJob?.cancel()
         pollingJob = viewModelScope.launch {
             var attempts = 0
-            val maxAttempts = 60 // Poll for up to 10 minutes (60 attempts * 10 seconds)
+            val maxAttempts = 60 // Poll for up to 10 minutes (60 attempts * server interval)
 
             while (attempts < maxAttempts) {
                 when (val result = authRepository.pollForAccessToken(deviceCode, interval)) {

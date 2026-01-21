@@ -44,7 +44,7 @@ class AuthRepository @Inject constructor(
                 Result.Error("Failed to start device flow: ${response.message()}")
             }
         } catch (e: Exception) {
-            Result.Error("Network error: ${e.localizedMessage ?: e.message ?: "Unknown error"}")
+            Result.Error(formatNetworkError(e))
         }
     }
     
@@ -96,7 +96,7 @@ class AuthRepository @Inject constructor(
                 Result.Error("Failed to poll for token: ${response.message()}")
             }
         } catch (e: Exception) {
-            Result.Error("Network error: ${e.localizedMessage ?: e.message ?: "Unknown error"}")
+            Result.Error(formatNetworkError(e))
         }
     }
     
@@ -139,7 +139,7 @@ class AuthRepository @Inject constructor(
                 Result.Error("Failed to get access token: ${response.message()}")
             }
         } catch (e: Exception) {
-            Result.Error("Network error: ${e.localizedMessage ?: e.message ?: "Unknown error"}")
+            Result.Error(formatNetworkError(e))
         }
     }
 
@@ -149,6 +149,13 @@ class AuthRepository @Inject constructor(
 
     suspend fun isAuthenticated(): Boolean {
         return !getAccessToken().isNullOrEmpty()
+    }
+    
+    /**
+     * Helper function to format network errors consistently
+     */
+    private fun formatNetworkError(e: Exception): String {
+        return "Network error: ${e.localizedMessage ?: e.message ?: "Unknown error"}"
     }
 }
 

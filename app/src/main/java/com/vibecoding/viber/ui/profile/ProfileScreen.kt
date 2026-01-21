@@ -38,7 +38,7 @@ fun ProfileScreen(
             CircularProgressIndicator()
         } else if (error != null) {
             Text(
-                text = error ?: "Unknown error",
+                text = error,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium
             )
