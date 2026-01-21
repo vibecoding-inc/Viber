@@ -7,7 +7,7 @@ Before you begin, ensure you have:
 - **Android Studio**: Arctic Fox (2020.3.1) or newer
 - **JDK**: Java 17 or higher
 - **Android SDK**: API Level 24 (Android 7.0) or higher
-- **GitHub Account**: For OAuth authentication
+- **GitHub Account**: For Device Flow authentication
 
 ## Initial Setup
 
@@ -18,25 +18,48 @@ git clone https://github.com/vibecoding-inc/Viber.git
 cd Viber
 ```
 
-### 2. Create a GitHub OAuth App
+### 2. Create a GitHub OAuth App or GitHub App
 
-To enable authentication, you need to register an OAuth application with GitHub:
+Viber uses **GitHub Device Flow** authentication, which is secure for mobile apps and doesn't require exposing client secrets.
+
+#### Option A: GitHub OAuth App (Recommended for Personal Use)
 
 1. Go to https://github.com/settings/developers
-2. Click **"New OAuth App"**
+2. Click **"OAuth Apps"** → **"New OAuth App"**
 3. Fill in the application details:
    - **Application name**: `Viber` (or your preferred name)
    - **Homepage URL**: `https://github.com/vibecoding-inc/Viber`
-   - **Authorization callback URL**: `viber://oauth/callback`
+   - **Authorization callback URL**: `viber://oauth/callback` (optional, for legacy support)
    - **Application description**: Optional
 4. Click **"Register application"**
-5. Note your **Client ID** and generate a **Client Secret**
+5. Note your **Client ID**
+6. **DO NOT** generate or use a Client Secret (not needed for Device Flow!)
 
-⚠️ **Security Note**: Keep your Client Secret secure. Never commit it to version control.
+#### Option B: GitHub App (Recommended for B2B/SaaS and Organizations)
+
+1. Go to https://github.com/settings/apps
+2. Click **"New GitHub App"**
+3. Fill in the application details:
+   - **GitHub App name**: `Viber` (must be globally unique)
+   - **Homepage URL**: `https://github.com/vibecoding-inc/Viber`
+   - **Webhook**: Uncheck "Active" (not needed for this app)
+   - **Permissions**: 
+     - Repository permissions: Contents (Read), Issues (Read & Write), Pull Requests (Read & Write)
+     - Organization permissions: Members (Read)
+     - Account permissions: Email addresses (Read)
+   - **Where can this GitHub App be installed?**: Choose based on your needs
+     - "Only on this account" for personal use
+     - "Any account" for public distribution
+4. Under **Identifying and authorizing users**:
+   - Check **"Request user authorization (OAuth) during installation"**
+   - Check **"Enable Device Flow"** ✅ (This is critical!)
+   - Callback URL: `viber://oauth/callback` (optional, for legacy support)
+5. Click **"Create GitHub App"**
+6. Note your **Client ID** from the app's General settings page
 
 ### 3. Configure the App
 
-Add your GitHub OAuth credentials to the project:
+Add your GitHub Client ID to the project:
 
 1. Open `gradle.properties` in the project root
 2. Add your GitHub Client ID:
@@ -44,8 +67,12 @@ Add your GitHub OAuth credentials to the project:
    OAUTH_CLIENT_ID=your_actual_client_id_here
    ```
 
-> **Note**: For production apps, the client secret should be handled server-side. This demo shows the OAuth flow structure.
-> **Note**: The property is named `OAUTH_CLIENT_ID` (not `GITHUB_CLIENT_ID`) due to GitHub Actions naming limitations.
+**Security Benefits of Device Flow:**
+- ✅ No client secret needed or exposed
+- ✅ Secure for mobile and desktop applications  
+- ✅ User authorizes on GitHub's website (trusted environment)
+- ✅ App never handles user's GitHub password
+- ✅ Industry standard for CLI tools and mobile apps
 
 ### 4. Build the Project
 

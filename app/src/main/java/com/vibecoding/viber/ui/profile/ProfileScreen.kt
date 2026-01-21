@@ -22,6 +22,7 @@ fun ProfileScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val vibeMode by viewModel.vibeMode.collectAsState()
     val catMode by viewModel.catMode.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadUser()
@@ -35,129 +36,141 @@ fun ProfileScreen(
     ) {
         if (isLoading) {
             CircularProgressIndicator()
-        } else if (user != null) {
-            Spacer(modifier = Modifier.height(32.dp))
-
-            AsyncImage(
-                model = user!!.avatarUrl,
-                contentDescription = "Profile picture",
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
+        } else if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
             )
-
             Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { viewModel.loadUser() }) {
+                Text("Retry")
+            }
+        } else {
+            user?.let { currentUser ->
+                Spacer(modifier = Modifier.height(32.dp))
 
-            Text(
-                text = user!!.name ?: user!!.login,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
+                AsyncImage(
+                    model = currentUser.avatarUrl,
+                    contentDescription = "Profile picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                )
 
-            Text(
-                text = "@${user!!.login}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-            )
+                Spacer(modifier = Modifier.height(16.dp))
 
-            if (user!!.bio != null) {
-                Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = user!!.bio!!,
+                    text = currentUser.name ?: currentUser.login,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "@${currentUser.login}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                ProfileStat("Repos", user!!.publicRepos.toString())
-                ProfileStat("Followers", user!!.followers.toString())
-                ProfileStat("Following", user!!.following.toString())
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Vibe Mode Toggle
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.AutoAwesome,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Vibe Mode", fontWeight = FontWeight.Medium)
-                    }
-                    Switch(
-                        checked = vibeMode,
-                        onCheckedChange = { viewModel.toggleVibeMode() }
+                currentUser.bio?.let { bio ->
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = bio,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-            // Cat Mode Toggle
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.spacedBy(24.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.Pets,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Column {
-                            Text("Cat Mode 🐱", fontWeight = FontWeight.Medium)
-                            Text(
-                                "Cats & confetti on success!",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    ProfileStat("Repos", currentUser.publicRepos.toString())
+                    ProfileStat("Followers", currentUser.followers.toString())
+                    ProfileStat("Following", currentUser.following.toString())
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Vibe Mode Toggle
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.AutoAwesome,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Vibe Mode", fontWeight = FontWeight.Medium)
                         }
+                        Switch(
+                            checked = vibeMode,
+                            onCheckedChange = { viewModel.toggleVibeMode() }
+                        )
                     }
-                    Switch(
-                        checked = catMode,
-                        onCheckedChange = { viewModel.toggleCatMode() }
-                    )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-            Button(
-                onClick = { viewModel.signOut() },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Icon(imageVector = Icons.Default.Logout, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Sign Out")
+                // Cat Mode Toggle
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.Pets,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.secondary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text("Cat Mode 🐱", fontWeight = FontWeight.Medium)
+                                Text(
+                                    "Cats & confetti on success!",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                                )
+                            }
+                        }
+                        Switch(
+                            checked = catMode,
+                            onCheckedChange = { viewModel.toggleCatMode() }
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = { viewModel.signOut() },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Icon(imageVector = Icons.Default.Logout, contentDescription = null)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Sign Out")
+                }
             }
         }
     }

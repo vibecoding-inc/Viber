@@ -10,6 +10,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * DEPRECATED: This activity handles the legacy OAuth callback flow.
+ * The new Device Flow authentication is recommended for better security.
+ * 
+ * This callback will not work properly without a server-side component to handle
+ * the client_secret, as it cannot be safely embedded in the Android app.
+ */
+@Deprecated("Use Device Flow authentication instead")
 @AndroidEntryPoint
 class OAuthCallbackActivity : ComponentActivity() {
 
@@ -23,20 +31,29 @@ class OAuthCallbackActivity : ComponentActivity() {
         if (uri != null && uri.scheme == "viber" && uri.host == "oauth") {
             val code = uri.getQueryParameter("code")
             if (code != null) {
-                // Use lifecycleScope to ensure token exchange completes before finishing
                 lifecycleScope.launch {
-                    // Note: In production, client_secret should be handled server-side
+                    // SECURITY WARNING: client_secret cannot be safely stored in mobile apps
+                    // This will fail without a proper backend service
+                    @Suppress("DEPRECATION")
                     val result = authRepository.handleAuthCode(code, "")
-                    if (result is Result.Error) {
-                        Log.e("OAuthCallbackActivity", "Auth failed: ${result.message}")
+                    when (result) {
+                        is Result.Success -> {
+                            Log.i("OAuthCallbackActivity", "Auth succeeded (legacy flow)")
+                            finish()
+                        }
+                        is Result.Error -> {
+                            Log.e("OAuthCallbackActivity", "Auth failed: ${result.message}")
+                            Log.e("OAuthCallbackActivity", "Use Device Flow authentication for proper security")
+                            finish()
+                        }
+                        else -> finish()
                     }
-                    finish()
                 }
                 return
             }
         }
 
-        // Close this activity and return to main
+        Log.w("OAuthCallbackActivity", "Invalid OAuth callback - use Device Flow instead")
         finish()
     }
 }

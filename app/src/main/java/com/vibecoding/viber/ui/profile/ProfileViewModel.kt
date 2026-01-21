@@ -31,6 +31,9 @@ class ProfileViewModel @Inject constructor(
     private val _catMode = MutableStateFlow(false)
     val catMode: StateFlow<Boolean> = _catMode.asStateFlow()
 
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
     init {
         viewModelScope.launch {
             preferencesManager.vibeModeEnabled.collect { enabled ->
@@ -48,13 +51,14 @@ class ProfileViewModel @Inject constructor(
     fun loadUser() {
         viewModelScope.launch {
             _isLoading.value = true
+            _error.value = null
 
             when (val result = repository.getCurrentUser()) {
                 is Result.Success -> {
                     _user.value = result.data
                 }
                 is Result.Error -> {
-                    // Handle error
+                    _error.value = result.message
                 }
                 else -> {}
             }

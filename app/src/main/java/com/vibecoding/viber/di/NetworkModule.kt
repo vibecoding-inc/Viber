@@ -42,7 +42,18 @@ object NetworkModule {
     @Singleton
     fun provideAuthInterceptor(preferencesManager: PreferencesManager): Interceptor {
         return Interceptor { chain ->
-            val token = runBlocking { preferencesManager.accessToken.first() }
+            // Get token synchronously from DataStore
+            // Note: This is called on OkHttp's IO thread, not the main thread
+            var token: String? = null
+            try {
+                token = runBlocking {
+                    preferencesManager.accessToken.first()
+                }
+            } catch (e: Exception) {
+                // If we can't get the token, proceed without it
+                android.util.Log.e("NetworkModule", "Failed to get access token", e)
+            }
+            
             val requestBuilder = chain.request().newBuilder()
             
             if (!token.isNullOrEmpty()) {
