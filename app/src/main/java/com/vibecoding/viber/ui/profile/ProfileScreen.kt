@@ -37,14 +37,16 @@ fun ProfileScreen(
         if (isLoading) {
             CircularProgressIndicator()
         } else if (error != null) {
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { viewModel.loadUser() }) {
-                Text("Retry")
+            error?.let { currentError ->
+                Text(
+                    text = currentError,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { viewModel.loadUser() }) {
+                    Text("Retry")
+                }
             }
         } else {
             user?.let { currentUser ->
